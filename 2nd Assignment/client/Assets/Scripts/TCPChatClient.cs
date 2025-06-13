@@ -23,6 +23,28 @@ public class TCPChatClient : MonoBehaviour
         connectToServer();
     }
 
+    private void Update()
+    {
+        if (_client != null && _client.Available > 0)
+        {
+            try
+            {
+                byte[] inBytes = StreamUtil.Read(_client.GetStream());
+                string inString = Encoding.UTF8.GetString(inBytes);
+                if (inString.StartsWith("__yourclientnameis:"))
+                {
+                    string givenName = inString.Substring(19);
+                    _panelWrapper.AddOutput($"Connected to server as '{givenName}'");
+                }
+                else _panelWrapper.AddOutput(inString);
+            }
+            catch (Exception ex)
+            {
+                _panelWrapper.AddOutput($"Receive error: {ex.Message}");
+            }
+        }
+    }
+
     private void connectToServer()
     {
         try
@@ -30,7 +52,7 @@ public class TCPChatClient : MonoBehaviour
 			_client = new TcpClient();
             _client.Connect(_hostname, _port);
             _panelWrapper.ClearOutput();
-            _panelWrapper.AddOutput("Connected to server.");
+            _panelWrapper.AddOutput("Type '/help' for the server commands or '/list' to see all online players.");
         }
         catch (Exception e)
         {
@@ -41,28 +63,45 @@ public class TCPChatClient : MonoBehaviour
 
     private void onTextEntered(string pInput)
     {
-        if (pInput == null || pInput.Length == 0) return;
+        if (string.IsNullOrWhiteSpace(pInput)) return;
 
         _panelWrapper.ClearInput();
 
-		try 
+        try
         {
-			//echo client - send one, expect one (hint: that is not how a chat works ...)
-			byte[] outBytes = Encoding.UTF8.GetBytes(pInput);
-			StreamUtil.Write(_client.GetStream(), outBytes);
-
-			byte[] inBytes = StreamUtil.Read(_client.GetStream());
-            string inString = Encoding.UTF8.GetString(inBytes);
-            _panelWrapper.AddOutput(inString);
-		} 
-        catch (Exception e) 
+            byte[] outBytes = Encoding.UTF8.GetBytes(pInput);
+            StreamUtil.Write(_client.GetStream(), outBytes);
+        }
+        catch (Exception e)
         {
-            _panelWrapper.AddOutput(e.Message);
-			//for quicker testing, we reconnect if something goes wrong.
-			_client.Close();
-			connectToServer();
-		}
+            _panelWrapper.AddOutput($"Send error: {e.Message}");
+        }
     }
+
+    /* private void onTextEntered(string pInput)
+     {
+         if (pInput == null || pInput.Length == 0) return;
+
+         _panelWrapper.ClearInput();
+
+         try 
+         {
+             //echo client - send one, expect one (hint: that is not how a chat works ...)
+             byte[] outBytes = Encoding.UTF8.GetBytes(pInput);
+             StreamUtil.Write(_client.GetStream(), outBytes);
+
+             byte[] inBytes = StreamUtil.Read(_client.GetStream());
+             string inString = Encoding.UTF8.GetString(inBytes);
+             _panelWrapper.AddOutput(inString);
+         } 
+         catch (Exception e) 
+         {
+             _panelWrapper.AddOutput(e.Message);
+             //for quicker testing, we reconnect if something goes wrong.
+             _client.Close();
+             connectToServer();
+         }
+     }*/
 
 }
 
