@@ -48,16 +48,53 @@ class TCPServerSample
 		}
 	}
 
-	private void processExistingClients()
-	{
-		foreach (TcpClient client in _clients)
-		{
-			if (client.Available == 0) continue;
+    /*private void processExistingClients()
+    {
+        foreach (TcpClient client in _clients)
+        {
+            if (client.Available == 0) continue;
 
-			//just send back anything we got
-			StreamUtil.Write(client.GetStream(), StreamUtil.Read(client.GetStream()));
-		}
-	}
+            //just send back anything we got
 
+            StreamUtil.Write(client.GetStream(), StreamUtil.Read(client.GetStream()));
+        }
+    }*/
+    private void processExistingClients()
+    {
+        foreach (TcpClient sender in _clients.ToArray())
+        {
+            if (sender.Available == 0)   
+                continue;
+
+            byte[] data;
+            try
+            {
+                data = StreamUtil.Read(sender.GetStream());  
+            }
+            catch (Exception)
+            {
+                closeAndRemove(sender);
+                continue;
+            }
+
+            foreach (TcpClient receiver in _clients.ToArray())
+            {
+                try
+                {
+                    StreamUtil.Write(receiver.GetStream(), data);
+                }
+                catch (Exception)
+                {
+                    closeAndRemove(receiver);
+                }
+            }
+        }
+    }
+
+    private void closeAndRemove(TcpClient client)
+    {
+        try { client.Close(); } catch { }
+        _clients.Remove(client);
+    }
 }
 
