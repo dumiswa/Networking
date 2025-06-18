@@ -230,12 +230,18 @@ class TCPServerSample
 
             var target = clients.Values.FirstOrDefault(c => c.Name.Equals(targetName, StringComparison.OrdinalIgnoreCase));
 
-            if (target != null)
+            if (target != null && target != sender)
             {
                 StreamUtil.Write(target.Stream, System.Text.Encoding.UTF8.GetBytes($"[{DateTime.Now:HH:mm}] (whisper from {sender.Name}): {whisperMessage}"));
                 StreamUtil.Write(sender.Stream, System.Text.Encoding.UTF8.GetBytes($"[{DateTime.Now:HH:mm}] (you whispered to {target.Name}): {whisperMessage}"));
             }
-            else StreamUtil.Write(sender.Stream, System.Text.Encoding.UTF8.GetBytes($"\nTarget {targetName} does not exist"));
+            else if (target == sender) StreamUtil.Write(sender.Stream, System.Text.Encoding.UTF8.GetBytes($"~You can not whisper to yourself, please whisper to a valid client~"));
+            else StreamUtil.Write(sender.Stream, System.Text.Encoding.UTF8.GetBytes($"\n~Target {targetName} does not exist~"));
+        }
+        else if (parts.Length < 3) 
+        {
+            StreamUtil.Write(sender.Stream, System.Text.Encoding.UTF8.GetBytes($"~please use /whisper <target> <msg>~"));
+            return;
         }
     }
 	static void HandleHelp(Client client)
