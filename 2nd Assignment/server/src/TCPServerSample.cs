@@ -74,21 +74,32 @@ class TCPServerSample
 
 	static void AcceptNewClient(TcpListener listener)
 	{
+        TcpClient tcpClient = null;
         while (listener.Pending())
         {
-            var tcpClient = listener.AcceptTcpClient();
-            var newClient = new Client(tcpClient);
-
-            newClient.Name = $"Guest{guestCounter++}";
-            Console.WriteLine($"Accepted {newClient.Name}");
-
-            clients.Add(tcpClient, newClient);
-            StreamUtil.Write(newClient.Stream, System.Text.Encoding.UTF8.GetBytes($"__yourclientnameis:{newClient.Name}"));
-            
-            foreach (var client in clients.Values)
+            try
             {
-                StreamUtil.Write(newClient.Stream, System.Text.Encoding.UTF8.GetBytes($"\n {newClient.Name} joined the server"));
+                tcpClient = listener.AcceptTcpClient();
+                var newClient = new Client(tcpClient);
+
+                newClient.Name = $"Guest{guestCounter++}";
+                Console.WriteLine($"Accepted {newClient.Name}");
+
+                clients.Add(tcpClient, newClient);
+                StreamUtil.Write(newClient.Stream, System.Text.Encoding.UTF8.GetBytes($"__yourclientnameis:{newClient.Name}"));
+
+                foreach (var client in clients.Values)
+                {
+                    StreamUtil.Write(client.Stream, System.Text.Encoding.UTF8.GetBytes($"\n {newClient.Name} joined the server"));
+                }
             }
+            catch (Exception ex)
+            {
+                Console.Write($"Error while accpeting cleint: {ex.Message}");
+
+                if (tcpClient != null && clients.TryGetValue(tcpClient, out var faulty))
+                    RemoveClient(faulty);
+            }               
         }
     }
 
@@ -152,15 +163,20 @@ class TCPServerSample
         foreach (var faultyClient in clients.Keys.ToArray())
         {
             var client = clients[faultyClient];
-            if (!client.ServerClient.Connected || 
-                client.ServerClient.Client.Poll(0, SelectMode.SelectRead) && 
-                client.ServerClient.Available == 0)
+
+            try
             {
-                Console.WriteLine($"{client.Name} disconnected");
-                client.Stream.Close();
-                client.ServerClient.Close();
-                clients.Remove(faultyClient);
+                if (!client.ServerClient.Connected || (client.ServerClient.Client.Poll(0, SelectMode.SelectRead) && client.ServerClient.Available == 0))
+                {
+                    Console.WriteLine($"{client.Name} disconnected");
+                    RemoveClient(client);
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Cleanup error on {client.Name}: {ex.Message}");
+                RemoveClient(client);
+            }         
         }
     }
 
@@ -195,15 +211,24 @@ class TCPServerSample
             
         }
     }
+
+    static void RemoveClient(Client client)
+    {
+        Console.WriteLine($"Removed client {client.Name}");
+        try { client.Stream?.Close(); } catch { }
+        try { client.ServerClient.Close(); } catch { }
+        clients.Remove(client.ServerClient);
+    }
+
     static void HandleWhisper(Client sender, string message)
 	{
         string[] parts = message.Split(' ', 3);
         if (parts.Length == 3)
         {
-            string targetName = parts[1];
+            string targetName = parts[1].ToLower();
             string whisperMessage = parts[2];
 
-            var target = clients.Values.FirstOrDefault(c => c.Name == targetName);
+            var target = clients.Values.FirstOrDefault(c => c.Name.Equals(targetName, StringComparison.OrdinalIgnoreCase));
 
             if (target != null)
             {

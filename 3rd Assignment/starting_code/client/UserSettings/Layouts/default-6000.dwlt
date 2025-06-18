@@ -121,7 +121,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 100}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-  controlID: 2307
+  controlID: 93
   draggingID: 0
 --- !u!114 &6
 MonoBehaviour:
@@ -147,7 +147,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 100}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 2193
+  controlID: 40
   draggingID: 0
 --- !u!114 &7
 MonoBehaviour:
@@ -421,8 +421,8 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: ea550000
-      m_LastClickedID: 21994
+      m_SelectedIDs: 
+      m_LastClickedID: 0
       m_ExpandedIDs: 08fbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
@@ -1173,7 +1173,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 72700000
     m_LastClickedID: 28786
-    m_ExpandedIDs: ffffffff00000000705e0000725e0000745e0000765e0000785e0000
+    m_ExpandedIDs: 00000000705e0000725e0000745e0000765e0000785e0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
