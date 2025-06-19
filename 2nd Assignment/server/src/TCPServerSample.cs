@@ -71,21 +71,20 @@ class TCPServerSample
 	}
 
 
-
 	static void AcceptNewClient(TcpListener listener)
 	{
         TcpClient tcpClient = null;
-        while (listener.Pending())
+        while (listener.Pending()) // accept only if client is ready (avoids blocking)
         {
             try
             {
-                tcpClient = listener.AcceptTcpClient();
+                tcpClient = listener.AcceptTcpClient(); //accept client and return a listener
                 var newClient = new Client(tcpClient);
 
-                newClient.Name = $"Guest{guestCounter++}";
+                newClient.Name = $"guest{guestCounter++}";
                 Console.WriteLine($"Accepted {newClient.Name}");
 
-                clients.Add(tcpClient, newClient);
+                clients.Add(tcpClient, newClient); //adds to dictionary
                 StreamUtil.Write(newClient.Stream, System.Text.Encoding.UTF8.GetBytes($"__yourclientnameis:{newClient.Name}"));
 
                 foreach (var client in clients.Values)
@@ -104,17 +103,17 @@ class TCPServerSample
     }
 
 
-
+    //process input from clients
 	static void ProcessClients()
 	{
-        foreach (var newClient in clients.ToArray())
+        foreach (var newClient in clients.ToArray()) //safety check if client is removed 
         {
             var client = newClient.Value;
             try
             {
                 if (client.ServerClient.Available == 0) continue;
 
-                string message = System.Text.Encoding.UTF8.GetString(StreamUtil.Read(client.Stream));
+                string message = System.Text.Encoding.UTF8.GetString(StreamUtil.Read(client.Stream)); //read from send buffer
 
                 if (message.StartsWith("/setname"))
                 {
@@ -125,7 +124,7 @@ class TCPServerSample
 
                 if (message.StartsWith("/whisper"))
                 {
-                    HandleWhisper(client, message); 
+                    HandleWhisper(client, message);
                     continue;
                 }
 
@@ -147,13 +146,12 @@ class TCPServerSample
                     StreamUtil.Write(other.Stream, System.Text.Encoding.UTF8.GetBytes($"[{DateTime.Now:HH:mm}] {client.Name}: {message}"));
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) 
             {
-                Console.WriteLine($"{client.Name} disconnected or had problems logging in {ex.Message}");
-                client.Stream.Close();
-                client.ServerClient.Close();
-                clients.Remove(client.ServerClient);
-            }
+                Console.WriteLine($"Client had error: {ex}");
+                RemoveClient(client); 
+            } 
+            
         }
     }
 
@@ -166,7 +164,8 @@ class TCPServerSample
 
             try
             {
-                if (!client.ServerClient.Connected || (client.ServerClient.Client.Poll(0, SelectMode.SelectRead) && client.ServerClient.Available == 0))
+                if (!client.ServerClient.Connected ||   //check if socket is still connected
+                    (client.ServerClient.Client.Poll(0, SelectMode.SelectRead) && client.ServerClient.Available == 0))
                 {
                     Console.WriteLine($"{client.Name} disconnected");
                     RemoveClient(client);
@@ -189,7 +188,7 @@ class TCPServerSample
             return;
         }
 
-        bool isNameTaken = clients.Values.Any(cl => cl != sender && cl.Name.Equals(newName, StringComparison.OrdinalIgnoreCase));
+        bool isNameTaken = clients.Values.Any(c => c != sender && c.Name.Equals(newName, StringComparison.OrdinalIgnoreCase));
 
         if (isNameTaken)
             StreamUtil.Write(sender.Stream, System.Text.Encoding.UTF8.GetBytes($"\n~User '{newName}' is already taken~"));
@@ -215,9 +214,9 @@ class TCPServerSample
     static void RemoveClient(Client client)
     {
         Console.WriteLine($"Removed client {client.Name}");
-        try { client.Stream?.Close(); } catch { }
-        try { client.ServerClient.Close(); } catch { }
-        clients.Remove(client.ServerClient);
+        try { client.Stream?.Close(); } catch { } // closes networkstream
+        try { client.ServerClient.Close(); } catch { } // closes socket
+        clients.Remove(client.ServerClient); //removes from dictionary
     }
 
     static void HandleWhisper(Client sender, string message)
@@ -228,6 +227,7 @@ class TCPServerSample
             string targetName = parts[1].ToLower();
             string whisperMessage = parts[2];
 
+            // look for target by name
             var target = clients.Values.FirstOrDefault(c => c.Name.Equals(targetName, StringComparison.OrdinalIgnoreCase));
 
             if (target != null && target != sender)

@@ -61,47 +61,47 @@ public class TCPChatClient : MonoBehaviour
         }
     }
 
+    /* private void onTextEntered(string pInput)
+     {
+         if (string.IsNullOrWhiteSpace(pInput)) return;
+
+         _panelWrapper.ClearInput();
+
+         try
+         {
+             byte[] outBytes = Encoding.UTF8.GetBytes(pInput);
+             StreamUtil.Write(_client.GetStream(), outBytes);
+         }
+         catch (Exception e)
+         {
+             _panelWrapper.AddOutput($"Send error: {e.Message}");
+         }
+     }*/
+
     private void onTextEntered(string pInput)
     {
-        if (string.IsNullOrWhiteSpace(pInput)) return;
+        if (pInput == null || pInput.Length == 0) return;
 
         _panelWrapper.ClearInput();
 
         try
         {
+            //echo client - send one, expect one (hint: that is not how a chat works ...)
             byte[] outBytes = Encoding.UTF8.GetBytes(pInput);
             StreamUtil.Write(_client.GetStream(), outBytes);
+
+            byte[] inBytes = StreamUtil.Read(_client.GetStream());
+            string inString = Encoding.UTF8.GetString(inBytes);
+            _panelWrapper.AddOutput(inString);
         }
         catch (Exception e)
         {
-            _panelWrapper.AddOutput($"Send error: {e.Message}");
+            _panelWrapper.AddOutput(e.Message);
+            //for quicker testing, we reconnect if something goes wrong.
+            _client.Close();
+            connectToServer();
         }
     }
-
-    /* private void onTextEntered(string pInput)
-     {
-         if (pInput == null || pInput.Length == 0) return;
-
-         _panelWrapper.ClearInput();
-
-         try 
-         {
-             //echo client - send one, expect one (hint: that is not how a chat works ...)
-             byte[] outBytes = Encoding.UTF8.GetBytes(pInput);
-             StreamUtil.Write(_client.GetStream(), outBytes);
-
-             byte[] inBytes = StreamUtil.Read(_client.GetStream());
-             string inString = Encoding.UTF8.GetString(inBytes);
-             _panelWrapper.AddOutput(inString);
-         } 
-         catch (Exception e) 
-         {
-             _panelWrapper.AddOutput(e.Message);
-             //for quicker testing, we reconnect if something goes wrong.
-             _client.Close();
-             connectToServer();
-         }
-     }*/
 
 }
 
