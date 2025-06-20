@@ -34,6 +34,7 @@ class TCPServerSample
         {
             processNewClients();
             processExistingClients();
+            cleanupFaultyClients();
 
             Thread.Sleep(100);   // be kind to the CPU
         }
@@ -41,28 +42,39 @@ class TCPServerSample
 
 
     private void processNewClients()
-    {
-        while (_listener.Pending())
+    {     
+        while (_listener.Pending()) //polling
         {
-            TcpClient c = _listener.AcceptTcpClient();
-            _clients.Add(c);
+            TcpClient c = null;
+
+            try
+            {
+                c = _listener.AcceptTcpClient();
+                _clients.Add(c);
 
 
-            var avatar = (
-                id: _rnd.Next(1000, 9999),
-                skin: _rnd.Next(0, 4),
-                x: _rnd.Next(-3000, 3000),
-                z: _rnd.Next(-3000, 3000)
-            );
-            _avatars[c] = avatar;
+                var avatar = (
+                    id: _rnd.Next(1000, 9999),
+                    skin: _rnd.Next(0, 4),
+                    x: _rnd.Next(-3000, 3000),
+                    z: _rnd.Next(-3000, 3000)
+                );
+                _avatars[c] = avatar; //store data
 
-            //  full world to newcomer
-            StreamUtil.Write(c.GetStream(), BuildWorldPacket().GetBytes());
+                //  full world to new client
+                StreamUtil.Write(c.GetStream(), BuildWorldPacket().GetBytes());
 
-            //  newcomer announcement to everyone else
-            Broadcast(BuildJoinPacket(avatar), except: c);
+                //   announcement to everyone else
+                Broadcast(BuildJoinPacket(avatar), except: c);
 
-            Console.WriteLine($"Accepted new client #{avatar.id}.");
+                Console.WriteLine($"Accepted new client #{avatar.id}.");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error while processing new client {e.Message}");
+                //if ( c != null ) closeAndRemove(c);
+            }
+            
         }
     }
 
@@ -71,11 +83,11 @@ class TCPServerSample
     {
         foreach (TcpClient sender in _clients.ToArray())
         {
-            if (sender.Available == 0) continue;
+            if (sender.Available == 0) continue; //polling
 
             byte[] data;
             try { data = StreamUtil.Read(sender.GetStream()); }
-            catch { closeAndRemove(sender); continue; }
+            catch { /*closeAndRemove(sender);*/ continue; }
 
             Packet p = new Packet(data);
             string type = p.ReadString();
@@ -164,12 +176,12 @@ class TCPServerSample
 
     private void Broadcast(Packet p, TcpClient except = null)
     {
-        byte[] bytes = p.GetBytes();
+        byte[] bytes = p.GetBytes(); //convert p to b
         foreach (TcpClient c in _clients.ToArray())
         {
             if (c == except) continue;
             try { StreamUtil.Write(c.GetStream(), bytes); }
-            catch { closeAndRemove(c); }
+            catch { /*closeAndRemove(c);*/ }
         }
     }
 
@@ -188,15 +200,33 @@ class TCPServerSample
             if (deltaX * deltaX + deltaY * deltaY < WHISPER_RANGE * WHISPER_RANGE)
             {
                 try { StreamUtil.Write(avatar.Key.GetStream(), bytes); }
-                catch {  closeAndRemove (avatar.Key); }
+                catch {  /*closeAndRemove (avatar.Key);*/ }
             }
         }
     }
 
+    private void cleanupFaultyClients()
+    {
+        foreach (var client in _clients.ToArray())
+        {
+            if (!client.Connected || (client.Client.Poll(0, SelectMode.SelectRead) && client.Available == 0))
+            {
+                //closeAndRemove(client);
+
+                Console.WriteLine($"Client #{_avatars[client].id} removed");
+                if (_avatars.Remove(client, out var gone))
+                    Broadcast(BuildLeavePacket(gone.id), except: client);
+
+                try { client.Close(); } catch { }
+                _clients.Remove(client);
+            }
+        }
+    }
 
     private void closeAndRemove(TcpClient client)
     {
         // notify others first
+        Console.WriteLine($"Client #{_avatars[client].id} removed");
         if (_avatars.Remove(client, out var gone))
             Broadcast(BuildLeavePacket(gone.id), except: client);
 

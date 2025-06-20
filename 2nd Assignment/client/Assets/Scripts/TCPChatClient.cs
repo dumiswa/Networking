@@ -61,22 +61,6 @@ public class TCPChatClient : MonoBehaviour
         }
     }
 
-    /* private void onTextEntered(string pInput)
-     {
-         if (string.IsNullOrWhiteSpace(pInput)) return;
-
-         _panelWrapper.ClearInput();
-
-         try
-         {
-             byte[] outBytes = Encoding.UTF8.GetBytes(pInput);
-             StreamUtil.Write(_client.GetStream(), outBytes);
-         }
-         catch (Exception e)
-         {
-             _panelWrapper.AddOutput($"Send error: {e.Message}");
-         }
-     }*/
 
     private void onTextEntered(string pInput)
     {

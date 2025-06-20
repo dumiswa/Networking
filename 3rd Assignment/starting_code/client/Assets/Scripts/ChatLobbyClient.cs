@@ -19,8 +19,7 @@ public class ChatLobbyClient : MonoBehaviour
 
     private TcpClient _client;
     private int _myAvatarId = -1;
-    private int _mySkin = -1;
-    private readonly HashSet<int> _knownIds = new HashSet<int>();
+
 
     private void Start()
     {
@@ -135,18 +134,15 @@ public class ChatLobbyClient : MonoBehaviour
             int x = p.ReadInt();
             int z = p.ReadInt();
 
-            if (!_avatarAreaManager.HasAvatarView(id))
+            if (!_avatarAreaManager.HasAvatarView(id)) //if we dont know this avatar 
             {
                 AvatarView av = _avatarAreaManager.AddAvatarView(id);
                 av.SetSkin(skin);
                 av.Move(new Vector3(x / 1000f, 0, z / 1000f));
             }
-            if (_myAvatarId == -1)        // first packet that contains 'me'
-            {
-                _myAvatarId = id;
-                _mySkin = skin;
-                _knownIds.Add(id);
-            }
+            if (_myAvatarId == -1)   // first packet that contains 'me' is always me      
+                _myAvatarId = id;                  
+
         }
     }
 
