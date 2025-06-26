@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using shared;
 using System.Threading;
 
-
+using Client = (int, int, int);
 class TCPServerSample
 {
     public static void Main()

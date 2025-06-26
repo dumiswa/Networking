@@ -8,7 +8,7 @@ using System.Reflection;
 
 class TCPServerSample
 {
-	/**
+    /**
 	 * This class implements a simple concurrent TCP Echo server.
 	 * Read carefully through the comments below.
 	 */
@@ -18,7 +18,7 @@ class TCPServerSample
         public TcpClient ServerClient;
         public NetworkStream Stream;
         public string Name = "";
-
+        public string Room = "general";
         public Client(TcpClient client)
         {
             ServerClient = client;
@@ -29,63 +29,48 @@ class TCPServerSample
 
     static int guestCounter = 1;
     static readonly Dictionary<TcpClient, Client> clients = new Dictionary<TcpClient, Client>();
-	//static readonly List<Client> clients = new List<Client>();
+    //static readonly List<Client> clients = new List<Client>();
+
+    static readonly Dictionary<string, HashSet<Client>> rooms =
+        new Dictionary<string, HashSet<Client>>(StringComparer.OrdinalIgnoreCase)
+        { { "general", new HashSet<Client>() } };
+
+    public static void Main()
+    {
+        Console.WriteLine("Server started on port 55555");
+
+        var listener = new TcpListener(IPAddress.Any, 55555);
+        listener.Start();
 
 
-    public static void Main ()
-	{
-		Console.WriteLine("Server started on port 55555");
-
-		var listener = new TcpListener (IPAddress.Any, 55555);
-		listener.Start ();
-
-		//List<TcpClient> clients = new List<TcpClient>();
-		//List<Client> clients = new List<Client>();
-
-		while (true)
-		{
-			/*//First big change with respect to example 001
-			//We no longer block waiting for a client to connect, but we only block if we know
-			//a client is actually waiting (in other words, we will not block)
-			//In order to serve multiple clients, we add that client to a list
-			
-
-			//Second big change, instead of blocking on one client, 
-			//we now process all clients IF they have data available
-		   *//* foreach (TcpClient client in clients)
-			{
-				if (client.Available == 0) continue;
-				NetworkStream stream = client.GetStream();
-				StreamUtil.Write(stream, StreamUtil.Read(stream));
-			}*//*
-
-			
-			//Although technically not required, now that we are no longer blocking, 
-			//it is good to cut your CPU some slack*/
-
+        while (true)
+        {
             AcceptNewClient(listener);
             ProcessClients();
             CleanupFaultyClients();
-			Thread.Sleep(100);
-		}
-	}
+            Thread.Sleep(100);
+        }
+    }
 
 
-	static void AcceptNewClient(TcpListener listener)
-	{
-        TcpClient tcpClient = null;
+    static void AcceptNewClient(TcpListener listener)
+    {
         while (listener.Pending()) // accept only if client is ready (avoids blocking)
         {
+            TcpClient tcpClient = null;
             try
             {
                 tcpClient = listener.AcceptTcpClient(); //accept client and return a listener
                 var newClient = new Client(tcpClient);
 
                 newClient.Name = $"guest{guestCounter++}";
-                Console.WriteLine($"Accepted {newClient.Name}");
-
+               
                 clients.Add(tcpClient, newClient); //adds to dictionary
+                rooms["general"].Add(newClient);
+
                 StreamUtil.Write(newClient.Stream, System.Text.Encoding.UTF8.GetBytes($"__yourclientnameis:{newClient.Name}"));
+                BroadcastToRoom(newClient.Room, $"~{newClient.Name} joined the server and entered {newClient.Room}");
+                Console.WriteLine($"Accepted {newClient.Name}");
 
                 foreach (var client in clients.Values)
                 {
@@ -98,14 +83,14 @@ class TCPServerSample
 
                 if (tcpClient != null && clients.TryGetValue(tcpClient, out var faulty))
                     RemoveClient(faulty);
-            }               
+            }
         }
     }
 
 
     //process input from clients
-	static void ProcessClients()
-	{
+    static void ProcessClients()
+    {
         foreach (var newClient in clients.ToArray()) //safety check if client is removed 
         {
             var client = newClient.Value;
@@ -128,30 +113,44 @@ class TCPServerSample
                     continue;
                 }
 
-                if (message.StartsWith("/help"))
+                if (message.Equals("/help"))
                 {
                     HandleHelp(client);
                     continue;
                 }
 
-                if (message.StartsWith("/list"))
+                if (message.Equals("/list"))
                 {
                     HandleList(client);
                     continue;
                 }
 
-                foreach (var other in clients.Values)
+                if (message.StartsWith("/join"))
                 {
-                    //if (other != client)
-                    StreamUtil.Write(other.Stream, System.Text.Encoding.UTF8.GetBytes($"[{DateTime.Now:HH:mm}] {client.Name}: {message}"));
+                    HandleRoomJoin(client, message.Substring(6).Trim());
+                    continue;
                 }
+
+                if (message.StartsWith("/listrooms", StringComparison.OrdinalIgnoreCase))
+                {
+                    HandleListRooms(client);
+                    continue;
+                }
+
+                if (message.StartsWith("/listroom", StringComparison.OrdinalIgnoreCase))
+                {
+                    HandleListRoom(client);
+                    continue;
+                }
+                
+                BroadcastToRoom(client.Room, $"[{DateTime.Now:HH:mm}] {client.Name}: {message}");
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 Console.WriteLine($"Client had error: {ex}");
-                RemoveClient(client); 
-            } 
-            
+                RemoveClient(client);
+            }
+
         }
     }
 
@@ -175,7 +174,7 @@ class TCPServerSample
             {
                 Console.WriteLine($"Cleanup error on {client.Name}: {ex.Message}");
                 RemoveClient(client);
-            }         
+            }
         }
     }
 
@@ -207,7 +206,7 @@ class TCPServerSample
                 else StreamUtil.Write(client.Stream, System.Text.Encoding.UTF8.GetBytes($"\n~{oldName} changed their name to {newName}~"));
             }
 
-            
+
         }
     }
 
@@ -220,7 +219,7 @@ class TCPServerSample
     }
 
     static void HandleWhisper(Client sender, string message)
-	{
+    {
         string[] parts = message.Split(' ', 3);
         if (parts.Length == 3)
         {
@@ -238,14 +237,14 @@ class TCPServerSample
             else if (target == sender) StreamUtil.Write(sender.Stream, System.Text.Encoding.UTF8.GetBytes($"~You can not whisper to yourself, please whisper to a valid client~"));
             else StreamUtil.Write(sender.Stream, System.Text.Encoding.UTF8.GetBytes($"\n~Target {targetName} does not exist~"));
         }
-        else if (parts.Length < 3) 
+        else if (parts.Length < 3)
         {
             StreamUtil.Write(sender.Stream, System.Text.Encoding.UTF8.GetBytes($"~please use /whisper <target> <msg>~"));
             return;
         }
     }
-	static void HandleHelp(Client client)
-	{
+    static void HandleHelp(Client client)
+    {
         if (client != null)
         {
             StreamUtil.Write(client.Stream, System.Text.Encoding.UTF8.GetBytes($"\n~Commands: ~"));
@@ -253,17 +252,63 @@ class TCPServerSample
             StreamUtil.Write(client.Stream, System.Text.Encoding.UTF8.GetBytes($"~Use '/whisper' + target + message to whisper to a client~"));
             StreamUtil.Write(client.Stream, System.Text.Encoding.UTF8.GetBytes($"~Use '/help' to see all commands~"));
             StreamUtil.Write(client.Stream, System.Text.Encoding.UTF8.GetBytes($"~Use '/list' to see all connected clients~"));
+            StreamUtil.Write(client.Stream, System.Text.Encoding.UTF8.GetBytes($"~Use '/join' <room> to create / enter a room ~"));
+            StreamUtil.Write(client.Stream, System.Text.Encoding.UTF8.GetBytes($"~Use '/listroom' or '/listrooms' to see all rooms~"));
         }
     }
-	static void HandleList(Client client)
-	{
+    static void HandleList(Client client)
+    {
         if (client != null)
         {
-            StreamUtil.Write(client.Stream, System.Text.Encoding.UTF8.GetBytes($"\nList of Online Clients:")); 
+            string names = string.Join(", ", clients.Values.Select(c => c.Name));
+             StreamUtil.Write(client.Stream, System.Text.Encoding.UTF8.GetBytes($"Online: {names}"));
+        }
+    }
+    /*static void HandleList(Client client)
+    {
+        if (client != null)
+        {
+            StreamUtil.Write(client.Stream, System.Text.Encoding.UTF8.GetBytes($"\nList of Online Clients:"));
             foreach (var c in clients.ToArray())
             {
                 StreamUtil.Write(client.Stream, System.Text.Encoding.UTF8.GetBytes($"{c.Value.Name}"));
             }
+        }
+    }*/
+
+
+    static void HandleRoomJoin(Client sender, string roomName)
+    {
+        if (string.IsNullOrEmpty(roomName)) return;
+
+        rooms[sender.Room].Remove(sender);
+
+        if (!rooms.ContainsKey(roomName)) 
+            rooms[roomName] = new HashSet<Client>();
+
+        sender.Room = roomName;
+        rooms[roomName].Add(sender);
+        
+        StreamUtil.Write(sender.Stream, System.Text.Encoding.UTF8.GetBytes($"~You joined {roomName}"));
+        BroadcastToRoom(roomName, $"~{sender.Name} joined the room~");
+    }
+
+    static void HandleListRooms(Client client)
+    {
+        string list = string.Join(", ", rooms.Keys);
+        StreamUtil.Write(client.Stream, System.Text.Encoding.UTF8.GetBytes($"Active rooms: {list}"));
+    }
+    static void HandleListRoom(Client client)
+    {
+        string users = string.Join(", ", rooms[client.Room].Select(c => c.Name));
+        StreamUtil.Write(client.Stream, System.Text.Encoding.UTF8.GetBytes($"Users in {client.Room}: {users}"));
+    }
+
+    static void BroadcastToRoom(string room, string message)
+    {
+        foreach (var c in rooms[room])
+        {
+            StreamUtil.Write(c.Stream, System.Text.Encoding.UTF8.GetBytes(message));
         }
     }
 }

@@ -53,3 +53,5 @@ C:\Stuff\UNI\Projects\Networking\3rd Assignment\starting_code\server\obj\Debug\n
 C:\Stuff\UNI\Projects\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\server.pdb
 C:\Stuff\UNI\Projects\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\server.genruntimeconfig.cache
 C:\Stuff\UNI\Projects\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\ref\server.dll
+C:\Stuff\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\server.dll
+C:\Stuff\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\refint\server.dll

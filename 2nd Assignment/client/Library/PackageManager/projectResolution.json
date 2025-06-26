@@ -1,16 +1,16 @@
 {
   "context": {
-    "projectPath": "C:/Stuff/UNI/Projects/Networking/2nd Assignment/client/Packages",
+    "projectPath": "C:/Stuff/Networking/2nd Assignment/client/Packages",
     "unityVersion": "6000.0.25f1"
   },
   "inputs": [
-    "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Packages\\manifest.json",
-    "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Packages\\packages-lock.json"
+    "C:\\Stuff\\Networking\\2nd Assignment\\client\\Packages\\manifest.json",
+    "C:\\Stuff\\Networking\\2nd Assignment\\client\\Packages\\packages-lock.json"
   ],
   "outputs": {
     "com.unity.2d.sprite@1.0.0": {
       "name": "com.unity.2d.sprite",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.2d.sprite",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.2d.sprite",
       "fingerprint": "0e70656ef5df5c7161c8cfc6f24ab0dde0dc637e",
       "editorCompatibility": "2019.2.0a1",
       "version": "1.0.0",
@@ -18,7 +18,7 @@
     },
     "com.unity.ide.rider@3.0.34": {
       "name": "com.unity.ide.rider",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.ide.rider",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.ide.rider",
       "fingerprint": "ecbf706690e5ce42dc165ddd8e5754acda3dc6b9",
       "editorCompatibility": "2019.4.6f1",
       "version": "3.0.34",
@@ -26,7 +26,7 @@
     },
     "com.unity.ide.visualstudio@2.0.22": {
       "name": "com.unity.ide.visualstudio",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.ide.visualstudio",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.ide.visualstudio",
       "fingerprint": "8140e851d83e922ca2021b04a89519de94ebe38c",
       "editorCompatibility": "2019.4.25f1",
       "version": "2.0.22",
@@ -34,7 +34,7 @@
     },
     "com.unity.multiplayer.center@1.0.0": {
       "name": "com.unity.multiplayer.center",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.multiplayer.center",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.multiplayer.center",
       "fingerprint": "f502d8ac613fa076192423e73892fbd89eb4049b",
       "editorCompatibility": "6000.0.0a1",
       "version": "1.0.0",
@@ -42,7 +42,7 @@
     },
     "com.unity.ugui@2.0.0": {
       "name": "com.unity.ugui",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.ugui",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.ugui",
       "fingerprint": "306ebe9b8f890844da2089c9827a12c9a3167c92",
       "editorCompatibility": "2019.2.0a1",
       "version": "2.0.0",
@@ -50,211 +50,211 @@
     },
     "com.unity.modules.accessibility@1.0.0": {
       "name": "com.unity.modules.accessibility",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.accessibility",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.accessibility",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.ai@1.0.0": {
       "name": "com.unity.modules.ai",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.ai",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.ai",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.androidjni@1.0.0": {
       "name": "com.unity.modules.androidjni",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.androidjni",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.androidjni",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.animation@1.0.0": {
       "name": "com.unity.modules.animation",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.animation",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.animation",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.assetbundle@1.0.0": {
       "name": "com.unity.modules.assetbundle",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.assetbundle",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.assetbundle",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.audio@1.0.0": {
       "name": "com.unity.modules.audio",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.audio",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.audio",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.cloth@1.0.0": {
       "name": "com.unity.modules.cloth",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.cloth",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.cloth",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.director@1.0.0": {
       "name": "com.unity.modules.director",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.director",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.director",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.imageconversion@1.0.0": {
       "name": "com.unity.modules.imageconversion",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.imageconversion",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.imageconversion",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.imgui@1.0.0": {
       "name": "com.unity.modules.imgui",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.imgui",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.imgui",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.jsonserialize@1.0.0": {
       "name": "com.unity.modules.jsonserialize",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.jsonserialize",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.jsonserialize",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.particlesystem@1.0.0": {
       "name": "com.unity.modules.particlesystem",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.particlesystem",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.particlesystem",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.physics@1.0.0": {
       "name": "com.unity.modules.physics",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.physics",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.physics",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.physics2d@1.0.0": {
       "name": "com.unity.modules.physics2d",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.physics2d",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.physics2d",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.screencapture@1.0.0": {
       "name": "com.unity.modules.screencapture",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.screencapture",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.screencapture",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.terrain@1.0.0": {
       "name": "com.unity.modules.terrain",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.terrain",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.terrain",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.terrainphysics@1.0.0": {
       "name": "com.unity.modules.terrainphysics",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.terrainphysics",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.terrainphysics",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.tilemap@1.0.0": {
       "name": "com.unity.modules.tilemap",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.tilemap",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.tilemap",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.ui@1.0.0": {
       "name": "com.unity.modules.ui",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.ui",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.ui",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.uielements@1.0.0": {
       "name": "com.unity.modules.uielements",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.uielements",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.uielements",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.umbra@1.0.0": {
       "name": "com.unity.modules.umbra",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.umbra",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.umbra",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.unityanalytics@1.0.0": {
       "name": "com.unity.modules.unityanalytics",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.unityanalytics",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.unityanalytics",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.unitywebrequest@1.0.0": {
       "name": "com.unity.modules.unitywebrequest",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.unitywebrequest",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.unitywebrequest",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.unitywebrequestassetbundle@1.0.0": {
       "name": "com.unity.modules.unitywebrequestassetbundle",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.unitywebrequestassetbundle",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.unitywebrequestassetbundle",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.unitywebrequestaudio@1.0.0": {
       "name": "com.unity.modules.unitywebrequestaudio",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.unitywebrequestaudio",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.unitywebrequestaudio",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.unitywebrequesttexture@1.0.0": {
       "name": "com.unity.modules.unitywebrequesttexture",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.unitywebrequesttexture",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.unitywebrequesttexture",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.unitywebrequestwww@1.0.0": {
       "name": "com.unity.modules.unitywebrequestwww",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.unitywebrequestwww",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.unitywebrequestwww",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.vehicles@1.0.0": {
       "name": "com.unity.modules.vehicles",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.vehicles",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.vehicles",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.video@1.0.0": {
       "name": "com.unity.modules.video",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.video",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.video",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.vr@1.0.0": {
       "name": "com.unity.modules.vr",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.vr",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.vr",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.wind@1.0.0": {
       "name": "com.unity.modules.wind",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.wind",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.wind",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.xr@1.0.0": {
       "name": "com.unity.modules.xr",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.xr",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.xr",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.subsystems@1.0.0": {
       "name": "com.unity.modules.subsystems",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.subsystems",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.subsystems",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.modules.hierarchycore@1.0.0": {
       "name": "com.unity.modules.hierarchycore",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.hierarchycore",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.modules.hierarchycore",
       "version": "1.0.0",
       "source": "builtin"
     },
     "com.unity.test-framework@1.4.5": {
       "name": "com.unity.test-framework",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.test-framework",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.test-framework",
       "fingerprint": "0a21eb82d95cd331643a1e0ce4e8e9a5f18954c8",
       "editorCompatibility": "2019.4.0a10",
       "version": "1.4.5",
@@ -262,7 +262,7 @@
     },
     "com.unity.ext.nunit@2.0.5": {
       "name": "com.unity.ext.nunit",
-      "resolvedPath": "C:\\Stuff\\UNI\\Projects\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.ext.nunit",
+      "resolvedPath": "C:\\Stuff\\Networking\\2nd Assignment\\client\\Library\\PackageCache\\com.unity.ext.nunit",
       "fingerprint": "60ef35ffd3cd5e2f5c8887a4a4ca6148854cd092",
       "editorCompatibility": "2019.4.0a1",
       "version": "2.0.5",
