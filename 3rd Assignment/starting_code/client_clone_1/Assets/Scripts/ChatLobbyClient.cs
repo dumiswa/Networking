@@ -15,7 +15,7 @@ public class ChatLobbyClient : MonoBehaviour
     private TcpClient _client;
     private int _myAvatarId = -1;
 
-    
+
     private void Start()
     {
         _avatarAreaManager = FindFirstObjectByType<AvatarAreaManager>();
@@ -76,6 +76,14 @@ public class ChatLobbyClient : MonoBehaviour
             return;
         }
 
+        const string SKIN = "/changeskin";
+        if (msg.StartsWith(SKIN, StringComparison.OrdinalIgnoreCase))
+        {
+            if (int.TryParse(msg.Substring(SKIN.Length), out int skin))
+                StreamUtil.Write(_client.GetStream(), new Packet(new ChangeSkinCommand(_myAvatarId, skin)).GetBytes());
+            return;
+        }
+
         StreamUtil.Write(_client.GetStream(),
             new Packet(new TextCommand(_myAvatarId, msg)).GetBytes());
     }
@@ -94,6 +102,7 @@ public class ChatLobbyClient : MonoBehaviour
             case MoveCommand m: HandleMove(m); break;
             case TextCommand t: HandleText(t); break;
             case LeaveCommand l: HandleLeave(l); break;
+            case ChangeSkinCommand s: HandleSkin(s); break;
         }
     }
 
@@ -106,19 +115,38 @@ public class ChatLobbyClient : MonoBehaviour
             {
                 var view = _avatarAreaManager.AddAvatarView(a.Id);
                 view.SetSkin(a.Skin);
-                view.Move(new Vector3(a.X / 1000f, 0, a.Z / 1000f));
+                //view.Move(new Vector3(a.X / 1000f, 0, a.Z / 1000f));
+                view.transform.position = new Vector3(a.X / 1000f, 0, a.Z / 1000f);
             }
-            if (_myAvatarId == -1) _myAvatarId = a.Id;   // first avatar = me
+            //if (_myAvatarId == -1) _myAvatarId = a.Id;   // first avatar = me
+
+            //if (a.Id == _myAvatarId) _avatarAreaManager.GetAvatarView(a.Id).ShowRing(true);
         }
     }
 
     private void HandleJoin(JoinCommand j)
     {
-        if (_avatarAreaManager.HasAvatarView(j.Id)) return;
+        AvatarView view;
 
-        var view = _avatarAreaManager.AddAvatarView(j.Id);
-        view.SetSkin(j.Skin);
-        view.Move(new Vector3(j.X / 1000f, 0, j.Z / 1000f));
+        if (_avatarAreaManager.HasAvatarView(j.Id))
+        {
+            view = _avatarAreaManager.GetAvatarView(j.Id);
+        }
+        else
+        {
+            view = _avatarAreaManager.AddAvatarView(j.Id);
+            //var view = _avatarAreaManager.AddAvatarView(j.Id);
+            view.SetSkin(j.Skin);
+            //view.Move(new Vector3(j.X / 1000f, 0, j.Z / 1000f));
+            view.transform.position = new Vector3(j.X / 1000f, 0, j.Z / 1000f);
+        }
+
+        if (_myAvatarId == -1)
+        {
+            _myAvatarId = j.Id;
+            view.ShowRing(true);
+        }
+        else view.ShowRing(false);
     }
 
     private void HandleMove(MoveCommand m)
@@ -138,5 +166,16 @@ public class ChatLobbyClient : MonoBehaviour
     {
         if (_avatarAreaManager.HasAvatarView(l.Id))
             _avatarAreaManager.RemoveAvatarView(l.Id);
+    }
+
+    private void HandleSkin(ChangeSkinCommand s)
+    {
+        if (_avatarAreaManager.HasAvatarView(s.Id))
+        {
+            var view = _avatarAreaManager.GetAvatarView(s.Id);
+            view.SetSkin(s.NewSkin);
+
+            if(s.Id == _myAvatarId) view.ShowRing(true);
+        }
     }
 }

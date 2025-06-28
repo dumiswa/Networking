@@ -30,6 +30,9 @@ public class AvatarView : MonoBehaviour
     private SpeechBubble _speechBubble; //reference to the speech bubble so we can say stuff
     private Animator _animator = null;  //if present a reference to the animator so we can check if we are walking
 
+    [SerializeField] private Transform _ringPrefab;
+    private GameObject _ring;
+
     private void Awake()
     {
         //this should always be present
@@ -71,6 +74,7 @@ public class AvatarView : MonoBehaviour
      */
     public void SetSkin (int pSkin)
     {
+
         //'normalize' the skin id so we will never crash
         if (pSkin % prefabs.Count == _skinId) return;
         _skinId = Mathf.Clamp(pSkin % prefabs.Count, 0, prefabs.Count);
@@ -85,8 +89,16 @@ public class AvatarView : MonoBehaviour
 
         //throw some scaling effect in there
         _skin.transform.DOScale(1, 1).From(0.01f, true).SetEase(Ease.OutElastic);
-    }
 
+        //ShowRing(true);
+    }
+    public void ShowRing(bool show = true)
+    {
+        if (_skin == null) return;                                // no skin yet
+
+        Transform ringT = _skin.transform.Find("Ring");           // direct child
+        if (ringT != null) ringT.gameObject.SetActive(show);      // toggle
+    }
     /**
      * Queue the given text into the speechbubble.
      */
@@ -113,4 +125,5 @@ public class AvatarView : MonoBehaviour
         _animator.speed = _moving ? moveSpeed : 1;
     }
 
+    
 }

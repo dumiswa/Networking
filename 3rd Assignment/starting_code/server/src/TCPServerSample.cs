@@ -64,6 +64,7 @@ class TCPServerSample
 
                 // announcement to everyone else
                 var joinPacket = new Packet(new JoinCommand(avatar.id, avatar.skin, avatar.x, avatar.z));
+                StreamUtil.Write(c.GetStream(), joinPacket.GetBytes());
                 Broadcast(joinPacket, except: c);
 
                 Console.WriteLine($"Accepted new client #{avatar.id}.");
@@ -115,6 +116,11 @@ class TCPServerSample
 
                 case WhisperCommand whisper:
                     handleWhisper(sender, me, whisper.Message);
+                    break;
+                case ChangeSkinCommand changeSkin:
+                    me.skin = changeSkin.NewSkin;
+                    _avatars[sender] = me;
+                    Broadcast(new Packet(new ChangeSkinCommand(me.id, me.skin)));
                     break;
             }
         }

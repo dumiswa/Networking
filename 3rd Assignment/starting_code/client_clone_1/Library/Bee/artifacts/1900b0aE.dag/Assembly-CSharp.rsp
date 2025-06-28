@@ -389,7 +389,6 @@
 "Assets/Scripts/AvatarModel.cs"
 "Assets/Scripts/ChatLobbyClient.cs"
 "Assets/Scripts/JoinRequest.cs"
-"Assets/Scripts/MoveCommand.cs"
 "Assets/Scripts/viewmanagement/AvatarAreaManager.cs"
 "Assets/Scripts/viewmanagement/AvatarView.cs"
 "Assets/Scripts/viewmanagement/PanelWrapper.cs"
