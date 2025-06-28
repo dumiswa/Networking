@@ -1,14 +1,9 @@
 ﻿using shared;
+using shared.src.protocol;
 using System;
-using System.Collections.Generic;
 using System.Net.Sockets;
 using UnityEngine;
 
-/**
- * The main ChatLobbyClient where you will have to do most of your work.
- * 
- * @author J.C. Wichman
- */
 public class ChatLobbyClient : MonoBehaviour
 {
     private AvatarAreaManager _avatarAreaManager;
@@ -20,50 +15,39 @@ public class ChatLobbyClient : MonoBehaviour
     private TcpClient _client;
     private int _myAvatarId = -1;
 
-
+    
     private void Start()
     {
         _avatarAreaManager = FindFirstObjectByType<AvatarAreaManager>();
-        _avatarAreaManager.OnAvatarAreaClicked += onAvatarAreaClicked;
+        _avatarAreaManager.OnAvatarAreaClicked += OnAvatarAreaClicked;
 
         _panelWrapper = FindFirstObjectByType<PanelWrapper>();
-        _panelWrapper.OnChatTextEntered += onChatTextEntered;
+        _panelWrapper.OnChatTextEntered += OnChatTextEntered;
 
-        connectToServer();
+        ConnectToServer();
     }
 
     private void Update()
     {
         if (_client == null || _client.Available == 0) return;
 
-        byte[] inBytes;
-        try
-        {
-            inBytes = StreamUtil.Read(_client.GetStream());
-            if (inBytes.Length == 0) return;
-        }
-        catch (Exception e)
-        {
-            Debug.LogWarning($"Stream read failed: {e.Message}");
-            return;
-        }
+        byte[] bytes;
+        try { bytes = StreamUtil.Read(_client.GetStream()); }
+        catch (Exception e) { Debug.LogWarning(e.Message); return; }
 
-        handlePacket(inBytes);
+        if (bytes != null && bytes.Length > 0)
+            HandleIncoming(bytes);
     }
 
-
-    private void connectToServer()
+    // outgoing
+    private void ConnectToServer()
     {
         try
         {
             _client = new TcpClient();
             _client.Connect(_server, _port);
             Debug.Log("Connected to server.");
-
-            // ask to join (no id/skin sent)
-            Packet joinReq = new Packet();
-            joinReq.Write("joinReq");
-            StreamUtil.Write(_client.GetStream(), joinReq.GetBytes());
+            // Server sends WorldCommand automatically
         }
         catch (Exception e)
         {
@@ -71,129 +55,88 @@ public class ChatLobbyClient : MonoBehaviour
         }
     }
 
-
-    private void onAvatarAreaClicked(Vector3 pClickPosition)
+    private void OnAvatarAreaClicked(Vector3 pos)
     {
-        Packet movePacket = new Packet();
-        movePacket.Write("moveReq");
-        movePacket.Write((int)(pClickPosition.x * 1000));
-        movePacket.Write((int)(pClickPosition.z * 1000));
-        StreamUtil.Write(_client.GetStream(), movePacket.GetBytes());
+        var cmd = new MoveCommand(0, (int)(pos.x * 1000), (int)(pos.z * 1000));
+        StreamUtil.Write(_client.GetStream(), new Packet(cmd).GetBytes());
     }
 
-    private void onChatTextEntered(string pText)
+    private void OnChatTextEntered(string raw)
     {
         _panelWrapper.ClearInput();
+        string msg = raw.Trim();
 
-        string trimText = pText.Trim();
-
-        const string WHISPER_CMD = "/whisper";
-
-        if (trimText.StartsWith(WHISPER_CMD, StringComparison.OrdinalIgnoreCase))
+        const string WHISPER = "/whisper";
+        if (msg.StartsWith(WHISPER, StringComparison.OrdinalIgnoreCase))
         {
-            string whisperMsg = trimText.Substring(WHISPER_CMD.Length);
-            if (whisperMsg.Length == 0) return;
-
-            Packet whisper = new Packet(); 
-            whisper.Write("whisperReq");
-            whisper.Write(whisperMsg);
-            StreamUtil.Write(_client.GetStream(), whisper.GetBytes());
+            string body = msg.Substring(WHISPER.Length).Trim();
+            if (body.Length > 0)
+                StreamUtil.Write(_client.GetStream(),
+                    new Packet(new WhisperCommand(body)).GetBytes());
             return;
         }
-       
-        Packet chatPacket = new Packet();
-        chatPacket.Write("textReq");
-        chatPacket.Write(pText);
-        StreamUtil.Write(_client.GetStream(), chatPacket.GetBytes());
+
+        StreamUtil.Write(_client.GetStream(),
+            new Packet(new TextCommand(_myAvatarId, msg)).GetBytes());
     }
 
-
-    private void handlePacket(byte[] data)
+    // incoming
+    private void HandleIncoming(byte[] data)
     {
-        Packet packet = new Packet(data);
-        string type = packet.ReadString();
+        ISerializable obj;
+        try { obj = new Packet(data).ReadObject(); }
+        catch (Exception e) { Debug.LogWarning(e.Message); return; }
 
-        switch (type)
+        switch (obj)
         {
-            case "world": handleWorld(packet); break;
-            case "pJoin": handleJoin(packet); break;
-            case "pMove": handleMove(packet); break;
-            case "pText": handleText(packet); break;
-            case "pWhisper": handleWhisper(packet); break;
-            case "pLeave": handleLeave(packet); break;
+            case WorldCommand w: HandleWorld(w); break;
+            case JoinCommand j: HandleJoin(j); break;
+            case MoveCommand m: HandleMove(m); break;
+            case TextCommand t: HandleText(t); break;
+            case LeaveCommand l: HandleLeave(l); break;
         }
     }
 
-    private void handleWorld(Packet p)
+    // command handlers 
+    private void HandleWorld(WorldCommand w)
     {
-        int n = p.ReadInt();
-        for (int i = 0; i < n; i++)
+        foreach (var a in w.Avatars)
         {
-            int id = p.ReadInt();
-            int skin = p.ReadInt();
-            int x = p.ReadInt();
-            int z = p.ReadInt();
-
-            if (!_avatarAreaManager.HasAvatarView(id)) //if we dont know this avatar 
+            if (!_avatarAreaManager.HasAvatarView(a.Id))
             {
-                AvatarView av = _avatarAreaManager.AddAvatarView(id);
-                av.SetSkin(skin);
-                av.Move(new Vector3(x / 1000f, 0, z / 1000f));
+                var view = _avatarAreaManager.AddAvatarView(a.Id);
+                view.SetSkin(a.Skin);
+                view.Move(new Vector3(a.X / 1000f, 0, a.Z / 1000f));
             }
-            if (_myAvatarId == -1)   // first packet that contains 'me' is always me      
-                _myAvatarId = id;                  
-
+            if (_myAvatarId == -1) _myAvatarId = a.Id;   // first avatar = me
         }
     }
 
-    private void handleJoin(Packet p)
+    private void HandleJoin(JoinCommand j)
     {
-        int id = p.ReadInt();
-        int skin = p.ReadInt();
-        int x = p.ReadInt();
-        int z = p.ReadInt();
+        if (_avatarAreaManager.HasAvatarView(j.Id)) return;
 
-        if (!_avatarAreaManager.HasAvatarView(id))
-        {
-            AvatarView av = _avatarAreaManager.AddAvatarView(id);
-            av.SetSkin(skin);
-            av.Move(new Vector3(x / 1000f, 0, z / 1000f));
-        }
+        var view = _avatarAreaManager.AddAvatarView(j.Id);
+        view.SetSkin(j.Skin);
+        view.Move(new Vector3(j.X / 1000f, 0, j.Z / 1000f));
     }
 
-    private void handleMove(Packet p)
+    private void HandleMove(MoveCommand m)
     {
-        int id = p.ReadInt();
-        int x = p.ReadInt();
-        int z = p.ReadInt();
-
-        if (_avatarAreaManager.HasAvatarView(id))
-            _avatarAreaManager.GetAvatarView(id)
-                .Move(new Vector3(x / 1000f, 0, z / 1000f));
+        if (_avatarAreaManager.HasAvatarView(m.Id))
+            _avatarAreaManager.GetAvatarView(m.Id)
+                              .Move(new Vector3(m.X / 1000f, 0, m.Z / 1000f));
     }
 
-    private void handleText(Packet p)
+    private void HandleText(TextCommand t)
     {
-        int id = p.ReadInt();
-        string msg = p.ReadString();
-
-        if (_avatarAreaManager.HasAvatarView(id))
-            _avatarAreaManager.GetAvatarView(id).Say(msg);
+        if (_avatarAreaManager.HasAvatarView(t.Id))
+            _avatarAreaManager.GetAvatarView(t.Id).Say(t.Message);
     }
 
-    private void handleWhisper(Packet p)
+    private void HandleLeave(LeaveCommand l)
     {
-        int id = p.ReadInt();
-        string msg = p.ReadString();
-
-        if (_avatarAreaManager.HasAvatarView(id))
-            _avatarAreaManager.GetAvatarView(id).Say($"(whisper) {msg}");
-    }
-
-    private void handleLeave(Packet p)
-    {
-        int id = p.ReadInt();
-        if (_avatarAreaManager.HasAvatarView(id))
-            _avatarAreaManager.RemoveAvatarView(id);
+        if (_avatarAreaManager.HasAvatarView(l.Id))
+            _avatarAreaManager.RemoveAvatarView(l.Id);
     }
 }

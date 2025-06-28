@@ -2,10 +2,10 @@
 using System.Net.Sockets;
 using System.Net;
 using System.Collections.Generic;
-using shared;
 using System.Threading;
+using shared;
+using shared.src.protocol;
 
-using Client = (int, int, int);
 class TCPServerSample
 {
     public static void Main()
@@ -18,8 +18,7 @@ class TCPServerSample
     private readonly List<TcpClient> _clients = new List<TcpClient>();
 
     // authoritative avatar store: key = socket, value = (id,skin,x,z)
-    private readonly Dictionary<TcpClient, (int id, int skin, int x, int z)> _avatars
-        = new Dictionary<TcpClient, (int, int, int, int)>();
+    private readonly Dictionary<TcpClient, (int id, int skin, int x, int z)> _avatars = new();
 
     private readonly Random _rnd = new Random();
 
@@ -40,9 +39,8 @@ class TCPServerSample
         }
     }
 
-
     private void processNewClients()
-    {     
+    {
         while (_listener.Pending()) //polling
         {
             TcpClient c = null;
@@ -52,7 +50,6 @@ class TCPServerSample
                 c = _listener.AcceptTcpClient();
                 _clients.Add(c);
 
-
                 var avatar = (
                     id: _rnd.Next(1000, 9999),
                     skin: _rnd.Next(0, 4),
@@ -61,23 +58,22 @@ class TCPServerSample
                 );
                 _avatars[c] = avatar; //store data
 
-                //  full world to new client
-                StreamUtil.Write(c.GetStream(), BuildWorldPacket().GetBytes());
+                // full world to new client
+                var worldPacket = new Packet(new WorldCommand(buildAvatarModels()));
+                StreamUtil.Write(c.GetStream(), worldPacket.GetBytes());
 
-                //   announcement to everyone else
-                Broadcast(BuildJoinPacket(avatar), except: c);
+                // announcement to everyone else
+                var joinPacket = new Packet(new JoinCommand(avatar.id, avatar.skin, avatar.x, avatar.z));
+                Broadcast(joinPacket, except: c);
 
                 Console.WriteLine($"Accepted new client #{avatar.id}.");
             }
             catch (Exception e)
             {
                 Console.WriteLine($"Error while processing new client {e.Message}");
-                //if ( c != null ) closeAndRemove(c);
             }
-            
         }
     }
-
 
     private void processExistingClients()
     {
@@ -87,91 +83,77 @@ class TCPServerSample
 
             byte[] data;
             try { data = StreamUtil.Read(sender.GetStream()); }
-            catch { /*closeAndRemove(sender);*/ continue; }
+            catch
+            {
+                // skip failed read (will be cleaned later)
+                continue;
+            }
 
-            Packet p = new Packet(data);
-            string type = p.ReadString();
-
-            if (!_avatars.ContainsKey(sender)) continue;   // safety net
+            if (!_avatars.ContainsKey(sender)) continue; // safety net
             var me = _avatars[sender];
 
-            switch (type)
+            ISerializable obj;
+            try { obj = new Packet(data).ReadObject(); }
+            catch (Exception e)
             {
-                case "moveReq":
-                    me.x = p.ReadInt();
-                    me.z = p.ReadInt();
-                    _avatars[sender] = me;                 // store back
-                    Broadcast(BuildMovePacket(me));
-                break;
+                Console.WriteLine($"Packet parse failed: {e.Message}");
+                continue;
+            }
 
-                case "textReq":
-                    string msg = p.ReadString();
-                    Broadcast(BuildTextPacket(me.id, msg));
-                break;
+            switch (obj)
+            {
+                case MoveCommand move:
+                    me.x = move.X;
+                    me.z = move.Z;
+                    _avatars[sender] = me;
+                    Broadcast(new Packet(new MoveCommand(me.id, me.x, me.z)));
+                    break;
 
-                case "whisperReq":
-                    handleWhisper(sender, me, p.ReadString());
-                break;
+                case TextCommand text:
+                    Broadcast(new Packet(new TextCommand(me.id, text.Message)));
+                    break;
+
+                case WhisperCommand whisper:
+                    handleWhisper(sender, me, whisper.Message);
+                    break;
             }
         }
     }
 
+    private void handleWhisper(TcpClient sender, (int id, int skin, int x, int z) me, string msg)
+    {
+        const int WHISPER_RANGE = 2000;
 
-    private Packet BuildWorldPacket()
-    {
-        Packet p = new Packet();
-        p.Write("world");
-        p.Write(_avatars.Count);
-        foreach (var a in _avatars.Values)
+        Packet whisperPacket = new Packet(new TextCommand(me.id, $"(whisper) {msg}"));
+        byte[] bytes = whisperPacket.GetBytes();
+
+        foreach (var avatar in _avatars)
         {
-            p.Write(a.id);
-            p.Write(a.skin);
-            p.Write(a.x); 
-            p.Write(a.z);
+            int deltaX = me.x - avatar.Value.x;
+            int deltaZ = me.z - avatar.Value.z;
+
+            if (deltaX * deltaX + deltaZ * deltaZ < WHISPER_RANGE * WHISPER_RANGE)
+            {
+                try { StreamUtil.Write(avatar.Key.GetStream(), bytes); }
+                catch { /*closeAndRemove (avatar.Key);*/ }
+            }
         }
-        return p;
     }
-    private Packet BuildJoinPacket((int id, int skin, int x, int z) a)
+
+    private void cleanupFaultyClients()
     {
-        Packet p = new Packet();
-        p.Write("pJoin");
-        p.Write(a.id); 
-        p.Write(a.skin);
-        p.Write(a.x);
-        p.Write(a.z);
-        return p;
-    }
-    private Packet BuildMovePacket((int id, int skin, int x, int z) a)
-    {
-        Packet p = new Packet();
-        p.Write("pMove");
-        p.Write(a.id);
-        p.Write(a.x);
-        p.Write(a.z);
-        return p;
-    }
-    private Packet BuildTextPacket(int id, string msg)
-    {
-        Packet p = new Packet();
-        p.Write("pText");
-        p.Write(id); 
-        p.Write(msg);
-        return p;
-    }
-    private Packet BuildWhisperPacket(int id, string msg)
-    {
-        Packet p = new Packet();
-        p.Write("pWhisper");
-        p.Write(id);
-        p.Write(msg);
-        return p;
-    }
-    private Packet BuildLeavePacket(int id)
-    {
-        Packet p = new Packet();
-        p.Write("pLeave");
-        p.Write(id);
-        return p;
+        foreach (var client in _clients.ToArray())
+        {
+            if (!client.Connected || (client.Client.Poll(0, SelectMode.SelectRead) && client.Available == 0))
+            {
+                Console.WriteLine($"Client #{_avatars[client].id} removed");
+                if (_avatars.Remove(client, out var gone))
+                    Broadcast(new Packet(new LeaveCommand(gone.id)), except: client);
+
+                try { client.Close(); } catch { }
+                _clients.Remove(client);
+            }
+        }
     }
 
     private void Broadcast(Packet p, TcpClient except = null)
@@ -185,52 +167,11 @@ class TCPServerSample
         }
     }
 
-    private void handleWhisper(TcpClient sender, (int id, int skin, int x, int z) me, string msg)
+    private List<AvatarModel> buildAvatarModels()
     {
-        const int WHISPER_RANGE = 2000;
-
-        Packet whisperPacket = BuildWhisperPacket(me.id, msg);
-        byte[] bytes = whisperPacket.GetBytes();
-
-        foreach (var avatar in _avatars)
-        {
-            int deltaX = me.x - avatar.Value.x;
-            int deltaY = me.z - avatar.Value.z;
-
-            if (deltaX * deltaX + deltaY * deltaY < WHISPER_RANGE * WHISPER_RANGE)
-            {
-                try { StreamUtil.Write(avatar.Key.GetStream(), bytes); }
-                catch {  /*closeAndRemove (avatar.Key);*/ }
-            }
-        }
-    }
-
-    private void cleanupFaultyClients()
-    {
-        foreach (var client in _clients.ToArray())
-        {
-            if (!client.Connected || (client.Client.Poll(0, SelectMode.SelectRead) && client.Available == 0))
-            {
-                //closeAndRemove(client);
-
-                Console.WriteLine($"Client #{_avatars[client].id} removed");
-                if (_avatars.Remove(client, out var gone))
-                    Broadcast(BuildLeavePacket(gone.id), except: client);
-
-                try { client.Close(); } catch { }
-                _clients.Remove(client);
-            }
-        }
-    }
-
-    private void closeAndRemove(TcpClient client)
-    {
-        // notify others first
-        Console.WriteLine($"Client #{_avatars[client].id} removed");
-        if (_avatars.Remove(client, out var gone))
-            Broadcast(BuildLeavePacket(gone.id), except: client);
-
-        try { client.Close(); } catch { }
-        _clients.Remove(client);
+        var list = new List<AvatarModel>();
+        foreach (var a in _avatars.Values)
+            list.Add(new AvatarModel(a.id, a.skin, a.x, a.z));
+        return list;
     }
 }

@@ -8,24 +8,19 @@
     ".NETStandard,Version=v2.1": []
   },
   "packageFolders": {
-    "C:\\Users\\dumit\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\dumit\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Stuff\\UNI\\Projects\\Networking\\3rd Assignment\\starting_code\\shared\\shared.csproj",
+      "projectUniqueName": "C:\\Stuff\\Networking\\3rd Assignment\\starting_code\\shared\\shared.csproj",
       "projectName": "shared",
-      "projectPath": "C:\\Stuff\\UNI\\Projects\\Networking\\3rd Assignment\\starting_code\\shared\\shared.csproj",
+      "projectPath": "C:\\Stuff\\Networking\\3rd Assignment\\starting_code\\shared\\shared.csproj",
       "packagesPath": "C:\\Users\\dumit\\.nuget\\packages\\",
-      "outputPath": "C:\\Stuff\\UNI\\Projects\\Networking\\3rd Assignment\\starting_code\\shared\\obj\\",
+      "outputPath": "C:\\Stuff\\Networking\\3rd Assignment\\starting_code\\shared\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
         "C:\\Users\\dumit\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -50,8 +45,7 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      },
-      "SdkAnalysisLevel": "9.0.100"
+      }
     },
     "frameworks": {
       "netstandard2.1": {
@@ -72,7 +66,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303\\RuntimeIdentifierGraph.json"
       }
     }
   }

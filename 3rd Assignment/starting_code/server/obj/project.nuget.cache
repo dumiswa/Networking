@@ -1,18 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "zpfyo6PXzh0=",
-  "success": false,
+  "dgSpecHash": "I8/w6dVnzv0=",
+  "success": true,
   "projectFilePath": "C:\\Stuff\\Networking\\3rd Assignment\\starting_code\\server\\server.csproj",
   "expectedPackageFiles": [],
-  "logs": [
-    {
-      "code": "NU1105",
-      "level": "Error",
-      "message": "Unable to find project information for 'C:\\Stuff\\Networking\\3rd Assignment\\starting_code\\shared\\shared.csproj'. If you are using Visual Studio, this may be because the project is unloaded or not part of the current solution so run a restore from the command-line. Otherwise, the project file may be invalid or missing targets required for restore.",
-      "libraryId": "C:\\Stuff\\Networking\\3rd Assignment\\starting_code\\shared\\shared.csproj",
-      "targetGraphs": [
-        "net8.0"
-      ]
-    }
-  ]
+  "logs": []
 }

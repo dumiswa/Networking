@@ -33,6 +33,13 @@ namespace shared
 			reader = new BinaryReader(new MemoryStream(pSource));
 		}
 
+		public Packet(ISerializable obj)
+		{
+			if (writer == null)
+				writer = new BinaryWriter(new MemoryStream());
+			Write(obj);
+		}
+
 		/// WRITE METHODS
 
 		public void Write (int pInt)							{		writer.Write(pInt);			}

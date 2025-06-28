@@ -34,24 +34,22 @@ D:\Dropbox\HW\saxion\courses_cmgt\2_3_networking\003_assignments\A3_minitown\A3_
 D:\Dropbox\HW\saxion\courses_cmgt\2_3_networking\003_assignments\A3_minitown\A3_mini_town\starting_code\server\obj\Debug\net8.0\server.pdb
 D:\Dropbox\HW\saxion\courses_cmgt\2_3_networking\003_assignments\A3_minitown\A3_mini_town\starting_code\server\obj\Debug\net8.0\server.genruntimeconfig.cache
 D:\Dropbox\HW\saxion\courses_cmgt\2_3_networking\003_assignments\A3_minitown\A3_mini_town\starting_code\server\obj\Debug\net8.0\ref\server.dll
-C:\Stuff\UNI\Projects\Networking\3rd Assignment\starting_code\server\bin\Debug\net8.0\server.exe
-C:\Stuff\UNI\Projects\Networking\3rd Assignment\starting_code\server\bin\Debug\net8.0\server.deps.json
-C:\Stuff\UNI\Projects\Networking\3rd Assignment\starting_code\server\bin\Debug\net8.0\server.runtimeconfig.json
-C:\Stuff\UNI\Projects\Networking\3rd Assignment\starting_code\server\bin\Debug\net8.0\server.dll
-C:\Stuff\UNI\Projects\Networking\3rd Assignment\starting_code\server\bin\Debug\net8.0\server.pdb
-C:\Stuff\UNI\Projects\Networking\3rd Assignment\starting_code\server\bin\Debug\net8.0\shared.dll
-C:\Stuff\UNI\Projects\Networking\3rd Assignment\starting_code\server\bin\Debug\net8.0\shared.pdb
-C:\Stuff\UNI\Projects\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\server.csproj.AssemblyReference.cache
-C:\Stuff\UNI\Projects\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\server.GeneratedMSBuildEditorConfig.editorconfig
-C:\Stuff\UNI\Projects\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\server.AssemblyInfoInputs.cache
-C:\Stuff\UNI\Projects\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\server.AssemblyInfo.cs
-C:\Stuff\UNI\Projects\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\server.csproj.CoreCompileInputs.cache
-C:\Stuff\UNI\Projects\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\server.sourcelink.json
-C:\Stuff\UNI\Projects\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\server.csproj.Up2Date
-C:\Stuff\UNI\Projects\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\server.dll
-C:\Stuff\UNI\Projects\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\refint\server.dll
-C:\Stuff\UNI\Projects\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\server.pdb
-C:\Stuff\UNI\Projects\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\server.genruntimeconfig.cache
-C:\Stuff\UNI\Projects\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\ref\server.dll
+C:\Stuff\Networking\3rd Assignment\starting_code\server\bin\Debug\net8.0\server.exe
+C:\Stuff\Networking\3rd Assignment\starting_code\server\bin\Debug\net8.0\server.deps.json
+C:\Stuff\Networking\3rd Assignment\starting_code\server\bin\Debug\net8.0\server.runtimeconfig.json
+C:\Stuff\Networking\3rd Assignment\starting_code\server\bin\Debug\net8.0\server.dll
+C:\Stuff\Networking\3rd Assignment\starting_code\server\bin\Debug\net8.0\server.pdb
+C:\Stuff\Networking\3rd Assignment\starting_code\server\bin\Debug\net8.0\shared.dll
+C:\Stuff\Networking\3rd Assignment\starting_code\server\bin\Debug\net8.0\shared.pdb
+C:\Stuff\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\server.csproj.AssemblyReference.cache
+C:\Stuff\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\server.GeneratedMSBuildEditorConfig.editorconfig
+C:\Stuff\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\server.AssemblyInfoInputs.cache
+C:\Stuff\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\server.AssemblyInfo.cs
+C:\Stuff\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\server.csproj.CoreCompileInputs.cache
+C:\Stuff\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\server.sourcelink.json
+C:\Stuff\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\server.csproj.Up2Date
 C:\Stuff\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\server.dll
 C:\Stuff\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\refint\server.dll
+C:\Stuff\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\server.pdb
+C:\Stuff\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\server.genruntimeconfig.cache
+C:\Stuff\Networking\3rd Assignment\starting_code\server\obj\Debug\net8.0\ref\server.dll
